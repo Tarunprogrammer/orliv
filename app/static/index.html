@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Urban Rooftop Organic Farming & Crop Project Assistant</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Marked.js -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .answer-body h1, .answer-body h2, .answer-body h3 { font-weight: 700; color: #14532d; margin-top: 1rem; margin-bottom: 0.5rem; }
+    .answer-body h1 { font-size: 1.25rem; }
+    .answer-body h2 { font-size: 1.15rem; }
+    .answer-body h3 { font-size: 1.05rem; }
+    .answer-body p { margin-bottom: 0.65rem; line-height: 1.65; color: #334155; }
+    .answer-body ul, .answer-body ol { margin-left: 1.25rem; margin-bottom: 0.65rem; color: #334155; }
+    .answer-body ul { list-style-type: disc; }
+    .answer-body ol { list-style-type: decimal; }
+    .answer-body li { margin-bottom: 0.35rem; line-height: 1.6; }
+    .answer-body strong { color: #166534; font-weight: 600; }
+    .answer-body blockquote { border-left: 4px solid #22c55e; background: #f0fdf4; padding: 0.5rem 1rem; border-radius: 0 0.5rem 0.5rem 0; margin: 0.75rem 0; color: #166534; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-full flex flex-col antialiased selection:bg-brand-200">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 px-3 sm:px-8 py-3 shadow-sm flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 flex-shrink-0">
+        <i data-lucide="sprout" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="font-bold text-sm sm:text-lg text-slate-900 tracking-tight">Rooftop Organic Farm Hub</h1>
+          <span id="dbBadge" class="px-2 py-0.5 text-[9px] sm:text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 rounded-full uppercase">DB: MySQL</span>
+        </div>
+        <p class="text-[11px] text-slate-500 hidden sm:block">Live Crop Projects • AI Disease Doctor • Organic Knowledge APIs</p>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <div class="flex items-center gap-2">
+      <nav class="flex p-1 bg-slate-100 rounded-2xl text-xs font-semibold overflow-x-auto max-w-[55vw] sm:max-w-none">
+        <button onclick="switchMainTab('projectsTab')" id="nav-projectsTab" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-white text-slate-900 shadow-sm transition-all flex items-center gap-1.5 whitespace-nowrap">
+          <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+          <span>My Crops</span>
+        </button>
+        <button onclick="switchMainTab('doctorTab')" id="nav-doctorTab" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5 whitespace-nowrap">
+          <i data-lucide="stethoscope" class="w-3.5 h-3.5"></i>
+          <span>Disease Doctor</span>
+        </button>
+        <button onclick="switchMainTab('calcTab')" id="nav-calcTab" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5 whitespace-nowrap">
+          <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+          <span>Roof Calculator</span>
+        </button>
+        <button onclick="switchMainTab('libraryTab')" id="nav-libraryTab" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5 whitespace-nowrap">
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          <span>Organic Library</span>
+        </button>
+        <button onclick="switchMainTab('chatTab')" id="nav-chatTab" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5 whitespace-nowrap">
+          <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+          <span>AI Advisor</span>
+        </button>
+      </nav>
+
+      <button onclick="openNewProjectModal()" class="hidden md:flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-md shadow-brand-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+        <span>New Crop</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-6xl w-full mx-auto p-3 sm:p-6 overflow-y-auto">
+
+    <!-- ========================================================================= -->
+    <!-- TAB 1: CROPS DASHBOARD (List of Projects)                                 -->
+    <!-- ========================================================================= -->
+    <div id="projectsTab" class="space-y-6">
+      
+      <div class="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-900 font-serif">Your Rooftop Farm Dashboard 🌿</h2>
+          <p class="text-xs sm:text-sm text-slate-600">Track real-time growth days, daily watering in ml, Jeevamrut schedules, and roof safety for each crop.</p>
+        </div>
+        <button onclick="openNewProjectModal()" class="w-full sm:w-auto px-5 py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md shadow-brand-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>Start New Crop Project</span>
+        </button>
+      </div>
+
+      <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Loaded dynamically via JS -->
+      </div>
+
+      <div id="noProjectsBanner" class="hidden text-center py-16 px-4 bg-white rounded-3xl border border-dashed border-slate-300 space-y-4">
+        <div class="w-16 h-16 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mx-auto text-2xl">🌱</div>
+        <div class="space-y-1">
+          <h3 class="font-bold text-lg text-slate-900 font-serif">No Active Crop Projects Yet</h3>
+          <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">Start your first organic terrace crop (Tomato, Chilli, Eggplant, Spinach, etc.) to get real-time day-by-day care schedules!</p>
+        </div>
+        <button onclick="openNewProjectModal()" class="px-5 py-2.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md transition-all">
+          Start Tomato Project 🍅
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- DEDICATED CROP PROJECT HUB (Real-time Day View)                            -->
+    <!-- ========================================================================= -->
+    <div id="projectDetailTab" class="hidden space-y-6">
+      
+      <div class="flex items-center justify-between">
+        <button onclick="switchMainTab('projectsTab')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-slate-900 text-xs font-semibold shadow-sm transition-all">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to All Crops</span>
+        </button>
+        <button onclick="deleteCurrentProject()" class="p-2 rounded-xl text-red-500 hover:bg-red-50 text-xs font-semibold flex items-center gap-1 transition-colors" title="Delete Project">
+          <i data-lucide="trash-2" class="w-4 h-4"></i>
+          <span>Delete Crop</span>
+        </button>
+      </div>
+
+      <div id="projectHero" class="bg-gradient-to-br from-brand-900 via-brand-800 to-emerald-900 text-white p-5 sm:p-8 rounded-3xl shadow-xl space-y-4"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center gap-2 text-blue-600 font-bold text-sm">
+            <i data-lucide="droplets" class="w-4 h-4"></i>
+            <span>Today's Watering</span>
+          </div>
+          <p id="careWaterAmount" class="text-2xl font-bold text-slate-900">800 ml</p>
+          <p id="careWaterTip" class="text-xs text-slate-600 leading-relaxed">Water early in the morning at the root zone.</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center gap-2 text-amber-600 font-bold text-sm">
+            <i data-lucide="flask-conical" class="w-4 h-4"></i>
+            <span>Organic Nutrition</span>
+          </div>
+          <p id="careFeedTitle" class="text-base font-bold text-slate-900">Liquid Jeevamrut</p>
+          <p id="careFeedTip" class="text-xs text-slate-600 leading-relaxed">Drench root zone with 1:10 dilution.</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+          <div class="flex items-center gap-2 text-emerald-600 font-bold text-sm">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            <span>Rooftop Safety</span>
+          </div>
+          <p id="careRoofTitle" class="text-base font-bold text-slate-900">Sun & Wind Advisory</p>
+          <p id="careRoofTip" class="text-xs text-slate-600 leading-relaxed">Ensure staking against wind gusts.</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-6">
+        
+        <div class="flex border-b border-slate-100 gap-4 sm:gap-6 text-xs sm:text-sm font-bold overflow-x-auto">
+          <button onclick="switchProjectSubTab('tasksSubTab')" id="subnav-tasksSubTab" class="pb-3 border-b-2 border-brand-600 text-brand-700 flex items-center gap-2 whitespace-nowrap">
+            <i data-lucide="check-square" class="w-4 h-4"></i>
+            <span>Care Checklist</span>
+          </button>
+          <button onclick="switchProjectSubTab('doctorSubTab')" id="subnav-doctorSubTab" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
+            <i data-lucide="camera" class="w-4 h-4"></i>
+            <span>AI Leaf Doctor</span>
+          </button>
+          <button onclick="switchProjectSubTab('logsSubTab')" id="subnav-logsSubTab" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            <span>Growth Log</span>
+          </button>
+        </div>
+
+        <!-- Sub-Tab 1: Tasks -->
+        <div id="tasksSubTab" class="space-y-3">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Scheduled Tasks for this Stage</p>
+          <div id="taskList" class="space-y-2.5"></div>
+        </div>
+
+        <!-- Sub-Tab 2: AI Leaf Doctor Upload for Project -->
+        <div id="doctorSubTab" class="hidden space-y-5">
+          <div class="bg-brand-50/70 p-4 sm:p-5 rounded-3xl border border-brand-200 space-y-3">
+            <div class="flex items-center gap-2 font-bold text-sm text-brand-900">
+              <i data-lucide="sparkles" class="w-4 h-4 text-brand-600"></i>
+              <span>Upload or Snap a Photo of your Leaf / Crop</span>
+            </div>
+            <p class="text-xs text-slate-600">Our Gemini Multimodal Vision AI will scan the leaf for fungal spots, aphids, thrips, or nutrient deficiencies, and prescribe an exact 100% organic remedy.</p>
+            
+            <!-- Mobile Camera Capture Buttons -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              
+              <!-- Option 1: Direct Mobile Camera (Hardware Intent) -->
+              <label for="projectDirectCameraInput" class="flex items-center justify-center gap-2 p-4 rounded-2xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-600/20 cursor-pointer transition-all">
+                <i data-lucide="camera" class="w-4 h-4"></i>
+                <span>📸 Take Live Photo</span>
+                <input type="file" id="projectDirectCameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleFileInput(this, true)" />
+              </label>
+
+              <!-- Option 2: Live In-Browser Viewfinder -->
+              <button type="button" onclick="openLiveCamera('project')" class="flex items-center justify-center gap-2 p-4 rounded-2xl bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all">
+                <i data-lucide="video" class="w-4 h-4"></i>
+                <span>🎥 Open Live Scanner</span>
+              </button>
+
+              <!-- Option 3: Phone Gallery / Files -->
+              <label for="projectGalleryInput" class="flex items-center justify-center gap-2 p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold text-xs sm:text-sm shadow-sm cursor-pointer transition-all">
+                <i data-lucide="image" class="w-4 h-4 text-brand-600"></i>
+                <span>🖼️ Choose from Gallery</span>
+                <input type="file" id="projectGalleryInput" accept="image/*" class="hidden" onchange="handleFileInput(this, true)" />
+              </label>
+
+            </div>
+
+            <!-- Preview Thumbnail Box -->
+            <div id="projectPhotoPreviewBox" class="hidden items-center gap-3 p-3 bg-white rounded-2xl border border-brand-200 mt-2">
+              <img id="projectPhotoPreviewImg" class="w-12 h-12 rounded-xl object-cover border border-slate-200" />
+              <div class="flex-1 min-w-0">
+                <p id="projectPhotoPreviewName" class="text-xs font-bold text-slate-800 truncate">Photo selected</p>
+                <p class="text-[10px] text-brand-600">Ready to diagnose</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="projectDiagLoading" class="hidden items-center gap-3 p-4 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 animate-pulse">
+            <div class="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-xs font-bold">Scanning leaf with AI Vision & formulating organic prescription...</span>
+          </div>
+
+          <div id="projectDiagResult" class="hidden"></div>
+
+          <div class="space-y-3 pt-4 border-t border-slate-100">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Past Health Checks for this Crop</p>
+            <div id="pastDiagnosesList" class="space-y-3"></div>
+          </div>
+        </div>
+
+        <!-- Sub-Tab 3: Growth Notes -->
+        <div id="logsSubTab" class="hidden space-y-4">
+          <form onsubmit="submitProjectLog(event)" class="flex flex-col sm:flex-row gap-2">
+            <select id="logTypeSelect" class="bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2 text-xs font-semibold">
+              <option value="watering">💧 Watered</option>
+              <option value="fertilizer">🧪 Fed Fertilizer</option>
+              <option value="observation">🌱 Growth Note</option>
+              <option value="pest">🐛 Pest Checked</option>
+              <option value="harvest">🧺 Harvested</option>
+            </select>
+            <input type="text" id="logNoteInput" placeholder="Add a quick observation (e.g. Added 2 cups compost, pruned suckers)..." class="flex-1 px-4 py-2.5 rounded-2xl border border-slate-200 text-xs focus:border-brand-500 focus:outline-none" required />
+            <button type="submit" class="px-4 py-2.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-sm">Save</button>
+          </form>
+
+          <div id="projectLogList" class="space-y-2.5 pt-2"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 2: STANDALONE PLANT DISEASE DOCTOR                                    -->
+    <!-- ========================================================================= -->
+    <div id="doctorTab" class="hidden max-w-3xl mx-auto space-y-6">
+      
+      <div class="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-2 text-center">
+        <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="stethoscope" class="w-6 h-6"></i>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 font-serif">Instant AI Plant Disease Doctor 🩺</h2>
+        <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">Upload a photo of any diseased leaf or plant. Get instant diagnosis and 100% natural organic remedies.</p>
+      </div>
+
+      <div class="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Select or Type Crop Name</label>
+          <input type="text" id="standaloneCropName" placeholder="e.g. Tomato, Chilli, Rose, Eggplant..." class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs focus:border-brand-500 focus:outline-none" />
+        </div>
+
+        <!-- Standalone Mobile Camera Options -->
+        <div class="space-y-3 p-4 rounded-3xl bg-slate-50 border border-slate-200">
+          <p class="text-xs font-bold text-slate-700 text-center">Snap or Upload Plant Leaf</p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            
+            <!-- Direct Camera Input -->
+            <label for="standaloneDirectCameraInput" class="flex items-center justify-center gap-2 p-4 rounded-2xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-600/20 cursor-pointer transition-all">
+              <i data-lucide="camera" class="w-4 h-4"></i>
+              <span>📸 Take Live Photo</span>
+              <input type="file" id="standaloneDirectCameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleFileInput(this, false)" />
+            </label>
+
+            <!-- Live In-App Camera -->
+            <button type="button" onclick="openLiveCamera('standalone')" class="flex items-center justify-center gap-2 p-4 rounded-2xl bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all">
+              <i data-lucide="video" class="w-4 h-4"></i>
+              <span>🎥 Open Live Scanner</span>
+            </button>
+
+            <!-- Gallery Picker -->
+            <label for="standaloneGalleryInput" class="flex items-center justify-center gap-2 p-4 rounded-2xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs sm:text-sm shadow-sm cursor-pointer transition-all">
+              <i data-lucide="image" class="w-4 h-4 text-brand-600"></i>
+              <span>🖼️ Choose from Gallery</span>
+              <input type="file" id="standaloneGalleryInput" accept="image/*" class="hidden" onchange="handleFileInput(this, false)" />
+            </label>
+
+          </div>
+        </div>
+
+        <div id="standaloneLoading" class="hidden items-center gap-3 p-4 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 animate-pulse">
+          <div class="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          <span class="text-xs font-bold">Diagnosing leaf symptoms & preparing organic treatment plan...</span>
+        </div>
+
+        <div id="standaloneResult" class="hidden"></div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 3: ROOFTOP STRUCTURAL LOAD CALCULATOR                                 -->
+    <!-- ========================================================================= -->
+    <div id="calcTab" class="hidden max-w-4xl mx-auto space-y-6">
+      
+      <div class="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-1">
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 font-serif">⚖️ Rooftop Structural Load & Mix Calculator</h2>
+        <p class="text-xs sm:text-sm text-slate-500">Calculate total wet weight (kg/m²) to verify roof safety compliance vs 150 kg/m² residential building code limits, and get exact 3:1:1 mix volume recipes.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+          <h3 class="font-bold text-sm text-slate-900 pb-2 border-b border-slate-100">Configure Container Setup</h3>
+          
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Number of Grow Bags / Pots</label>
+            <input type="number" id="calcContainers" value="10" min="1" max="500" class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-semibold focus:border-brand-500 focus:outline-none" oninput="runRoofCalculation()" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Volume per Bag (Liters)</label>
+            <select id="calcBagSize" class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-semibold focus:border-brand-500 focus:outline-none" onchange="runRoofCalculation()">
+              <option value="20">12x12 inch Grow Bag (~20 Liters)</option>
+              <option value="35">15x15 inch Grow Bag (~35 Liters)</option>
+              <option value="50">18x18 inch Large Tub (~50 Liters)</option>
+              <option value="12">10x10 inch Medium Pot (~12 Liters)</option>
+              <option value="15">6-inch Shallow Rectangular Tray (~15 Liters)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Terrace Area Covered (Square Meters / m²)</label>
+            <input type="number" id="calcArea" value="10" min="1" max="1000" step="0.5" class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-semibold focus:border-brand-500 focus:outline-none" oninput="runRoofCalculation()" />
+            <span class="text-[10px] text-slate-400 block mt-0.5">(Tip: 10 m² ≈ 108 sq. ft)</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Potting Medium Type</label>
+            <select id="calcSoilType" class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-semibold focus:border-brand-500 focus:outline-none" onchange="runRoofCalculation()">
+              <option value="3:1:1_cocopeat_mix">3:1:1 Cocopeat + Vermicompost + Perlite (Lightweight 0.45 kg/L)</option>
+              <option value="cocopeat_vermicompost">50:50 Cocopeat + Compost (0.50 kg/L)</option>
+              <option value="traditional_topsoil">Traditional Garden Mud / Red Soil (HEAVY 1.60 kg/L)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="calcResultBox" class="bg-gradient-to-br from-brand-900 to-emerald-950 text-white p-6 rounded-3xl shadow-xl space-y-4"></div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 4: ORGANIC ENCYCLOPEDIA & REMEDIES LIBRARY                            -->
+    <!-- ========================================================================= -->
+    <div id="libraryTab" class="hidden max-w-5xl mx-auto space-y-6">
+      
+      <div class="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 font-serif">📚 Organic Agronomy Encyclopedia</h2>
+            <p class="text-xs sm:text-sm text-slate-500">Verified botanical remedies, bio-fertilizer recipes, companion matrices, and thermal seed charts.</p>
+          </div>
+          
+          <div class="flex gap-2 overflow-x-auto w-full sm:w-auto">
+            <button onclick="loadRemediesLibrary('')" id="lib-remedies-btn" class="px-3 py-1.5 rounded-xl bg-brand-600 text-white text-xs font-bold shadow-sm whitespace-nowrap">🌿 Pest Remedies</button>
+            <button onclick="loadFertilizersLibrary()" id="lib-fert-btn" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold hover:bg-slate-200 whitespace-nowrap">🧪 Bio-Fertilizers</button>
+            <button onclick="loadSeedTreatmentLibrary()" id="lib-seed-btn" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold hover:bg-slate-200 whitespace-nowrap">🌡️ Seed Treatment</button>
+          </div>
+        </div>
+
+        <div class="relative">
+          <input type="text" id="librarySearchInput" placeholder="Search remedies or nutrients (e.g. 'mildew', 'aphids', 'jeevamrut', 'neem')..." class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-xs sm:text-sm focus:border-brand-500 focus:outline-none pr-10" oninput="handleLibrarySearch(this.value)" />
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5"></i>
+        </div>
+      </div>
+
+      <div id="libraryContentGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 5: AI AGRONOMIST CHAT (RAG Conversational Assistant)                  -->
+    <!-- ========================================================================= -->
+    <div id="chatTab" class="hidden max-w-3xl mx-auto flex flex-col h-[75vh] gap-4">
+      
+      <div id="chatMessages" class="flex-1 overflow-y-auto space-y-4 pr-1 pb-4 bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
+        <div class="flex items-start gap-3 bg-brand-50/70 p-4 rounded-2xl border border-brand-100">
+          <div class="w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center flex-shrink-0">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+          </div>
+          <div class="space-y-1 text-xs sm:text-sm text-slate-700">
+            <p class="font-bold text-brand-900">Hello! I'm your Rooftop Organic Farming Assistant 🌱</p>
+            <p>Ask me anything about 3:1:1 lightweight potting mix, roof weight safety, fermented buttermilk spray, liquid Jeevamrut, or companion planting!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-3 rounded-3xl border border-slate-200 shadow-lg">
+        <form id="chatForm" onsubmit="submitChatMessage(event)" class="flex gap-2">
+          <input type="text" id="chatInput" placeholder="Ask any rooftop farming question in plain English..." class="flex-1 px-4 py-3 bg-slate-50 focus:bg-white rounded-2xl border border-slate-200 text-xs sm:text-sm focus:border-brand-500 focus:outline-none" required />
+          <button type="submit" id="chatSendBtn" class="px-4 sm:px-5 py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-md">
+            <span>Ask</span>
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: IN-APP LIVE CAMERA SCANNER                                         -->
+  <!-- ========================================================================= -->
+  <div id="liveCameraModal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-between p-4 sm:p-6">
+    
+    <!-- Top Camera Header -->
+    <div class="w-full max-w-md flex items-center justify-between text-white z-10">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+        <span class="text-xs font-bold uppercase tracking-wider">Live Plant Scanner</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="switchCameraFacing()" class="p-2.5 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 text-white backdrop-blur-sm transition-all" title="Flip Camera">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+        </button>
+        <button type="button" onclick="closeLiveCamera()" class="p-2.5 rounded-2xl bg-white/10 hover:bg-white/20 active:scale-95 text-white backdrop-blur-sm transition-all" title="Close Camera">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Center Camera Video Viewfinder -->
+    <div class="relative w-full max-w-md aspect-[3/4] bg-black rounded-3xl overflow-hidden shadow-2xl border-2 border-white/20 flex items-center justify-center my-auto">
+      <video id="cameraVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
+      
+      <!-- Viewfinder Target Guide Overlay -->
+      <div class="absolute inset-8 border-2 border-dashed border-white/40 rounded-2xl pointer-events-none flex items-center justify-center">
+        <div class="text-center text-white/70 text-[11px] font-semibold bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">
+          Center diseased leaf inside frame
+        </div>
+      </div>
+
+      <!-- Hidden Canvas for frame snapshot -->
+      <canvas id="cameraCanvas" class="hidden"></canvas>
+    </div>
+
+    <!-- Bottom Shutter Control -->
+    <div class="w-full max-w-md flex flex-col items-center gap-3 z-10">
+      <button type="button" onclick="captureLivePhoto()" class="w-20 h-20 rounded-full bg-white p-1.5 shadow-2xl hover:scale-105 active:scale-90 transition-all flex items-center justify-center">
+        <div class="w-full h-full rounded-full border-4 border-slate-900 bg-brand-500 hover:bg-brand-600 transition-colors flex items-center justify-center">
+          <i data-lucide="camera" class="w-7 h-7 text-white"></i>
+        </div>
+      </button>
+      <span class="text-[11px] text-slate-400 font-medium">Tap round button to capture & diagnose</span>
+    </div>
+
+  </div>
+
+  <!-- MODAL: START NEW CROP PROJECT -->
+  <div id="newProjectModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5 animate-in fade-in zoom-in duration-150 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2.5 rounded-2xl bg-brand-50 text-brand-600">
+            <i data-lucide="sprout" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg text-slate-900 font-serif">Start a New Crop Project</h3>
+            <p class="text-xs text-slate-500">Track real-time growth and daily care on your roof</p>
+          </div>
+        </div>
+        <button onclick="closeNewProjectModal()" class="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form onsubmit="submitNewProject(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-2">Select Vegetable / Herb</label>
+          <div class="grid grid-cols-4 gap-2 text-center text-xs font-semibold">
+            <button type="button" onclick="selectCropType('tomato', 'Tomato', 'Arka Rakshak')" class="crop-btn p-2.5 rounded-2xl border border-brand-500 bg-brand-50 text-brand-800" data-type="tomato"><span class="text-xl block">🍅</span>Tomato</button>
+            <button type="button" onclick="selectCropType('chilli', 'Chilli Pepper', 'Pusa Jwala')" class="crop-btn p-2.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-slate-50 text-slate-700" data-type="chilli"><span class="text-xl block">🌶️</span>Chilli</button>
+            <button type="button" onclick="selectCropType('eggplant', 'Brinjal (Eggplant)', 'Pusa Purple')" class="crop-btn p-2.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-slate-50 text-slate-700" data-type="eggplant"><span class="text-xl block">🍆</span>Brinjal</button>
+            <button type="button" onclick="selectCropType('spinach', 'Spinach (Palak)', 'All Green')" class="crop-btn p-2.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-slate-50 text-slate-700" data-type="spinach"><span class="text-xl block">🥬</span>Spinach</button>
+            <button type="button" onclick="selectCropType('cucumber', 'Cucumber', 'Japanese Long')" class="crop-btn p-2.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-slate-50 text-slate-700" data-type="cucumber"><span class="text-xl block">🥒</span>Cucumber</button>
+            <button type="button" onclick="selectCropType('coriander', 'Coriander (Dhaniya)', 'Multi-Cut')" class="crop-btn p-2.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-slate-50 text-slate-700" data-type="coriander"><span class="text-xl block">🌿</span>Coriander</button>
+            <button type="button" onclick="selectCropType('okra', 'Okra (Bhindi)', 'Pusa Sawani')" class="crop-btn p-2.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-slate-50 text-slate-700" data-type="okra"><span class="text-xl block">🫑</span>Okra</button>
+            <button type="button" onclick="selectCropType('herbs', 'Basil / Mint', 'Sweet Basil')" class="crop-btn p-2.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-slate-50 text-slate-700" data-type="herbs"><span class="text-xl block">🌱</span>Herbs</button>
+          </div>
+          <input type="hidden" id="formCropType" value="tomato" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Project Name</label>
+            <input type="text" id="formCropName" value="Tomato Project" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-brand-500 focus:outline-none" required />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Variety / Cultivar</label>
+            <input type="text" id="formVariety" value="Arka Rakshak" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-brand-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">When did you plant/sow this crop?</label>
+          <input type="date" id="formPlantedDate" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-brand-500 focus:outline-none" required />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Container Type</label>
+            <select id="formContainer" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-brand-500 focus:outline-none">
+              <option value="12x12 HDPE Grow Bag">12x12 HDPE Grow Bag</option>
+              <option value="15x15 HDPE Grow Bag">15x15 HDPE Grow Bag</option>
+              <option value="6-inch Shallow Rectangular Tray">6-inch Shallow Rectangular Tray</option>
+              <option value="10-inch Terracotta Pot">10-inch Terracotta Pot</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Number of Bags/Pots</label>
+            <input type="number" id="formCount" value="2" min="1" max="50" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-brand-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <button type="submit" id="createProjectBtn" class="w-full py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md shadow-brand-600/20 transition-all cursor-pointer">
+          Launch Crop Project 🚀
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let activeProjectId = null;
+    let activeLibraryTab = 'remedies';
+    let currentCameraTarget = 'standalone'; // 'project' or 'standalone'
+    let currentFacingMode = 'environment';  // 'environment' (rear) or 'user' (front)
+    let activeCameraStream = null;
+
+    lucide.createIcons();
+
+    document.getElementById('formPlantedDate').value = new Date().toISOString().split('T')[0];
+
+    // Health check to show DB dialect
+    async function checkHealth() {
+      try {
+        const res = await fetch('/health');
+        const data = await res.json();
+        const badge = document.getElementById('dbBadge');
+        if (data.database_dialect === 'mysql') {
+          badge.className = 'px-2 py-0.5 text-[9px] sm:text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 rounded-full uppercase';
+          badge.innerText = 'DB: MySQL Local';
+        } else {
+          badge.className = 'px-2 py-0.5 text-[9px] sm:text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-300 rounded-full uppercase';
+          badge.innerText = 'DB: SQLite Local';
+        }
+      } catch (e) {
+        console.warn('Health check:', e);
+      }
+    }
+    checkHealth();
+
+    function switchMainTab(tabId) {
+      ['projectsTab', 'projectDetailTab', 'doctorTab', 'calcTab', 'libraryTab', 'chatTab'].forEach(t => {
+        const el = document.getElementById(t);
+        if (el) el.classList.add('hidden');
+      });
+      ['nav-projectsTab', 'nav-doctorTab', 'nav-calcTab', 'nav-libraryTab', 'nav-chatTab'].forEach(btn => {
+        const el = document.getElementById(btn);
+        if (el) el.className = 'px-2.5 sm:px-3.5 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5 whitespace-nowrap';
+      });
+
+      document.getElementById(tabId).classList.remove('hidden');
+      const activeNav = document.getElementById('nav-' + tabId);
+      if (activeNav) activeNav.className = 'px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-white text-slate-900 shadow-sm transition-all flex items-center gap-1.5 whitespace-nowrap';
+
+      if (tabId === 'projectsTab') loadProjects();
+      if (tabId === 'calcTab') runRoofCalculation();
+      if (tabId === 'libraryTab') loadRemediesLibrary('');
+      lucide.createIcons();
+    }
+
+    function switchProjectSubTab(subTabId) {
+      ['tasksSubTab', 'doctorSubTab', 'logsSubTab'].forEach(t => {
+        document.getElementById(t).classList.add('hidden');
+        document.getElementById('subnav-' + t).className = 'pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap';
+      });
+      document.getElementById(subTabId).classList.remove('hidden');
+      document.getElementById('subnav-' + subTabId).className = 'pb-3 border-b-2 border-brand-600 text-brand-700 flex items-center gap-2 whitespace-nowrap';
+      lucide.createIcons();
+    }
+
+    function openNewProjectModal() {
+      document.getElementById('newProjectModal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+    function closeNewProjectModal() {
+      document.getElementById('newProjectModal').classList.add('hidden');
+    }
+
+    function selectCropType(type, name, variety) {
+      document.querySelectorAll('.crop-btn').forEach(b => {
+        b.className = 'crop-btn p-2.5 rounded-2xl border border-slate-200 hover:border-brand-400 bg-slate-50 text-slate-700';
+      });
+      const selected = document.querySelector(`[data-type="${type}"]`);
+      if (selected) selected.className = 'crop-btn p-2.5 rounded-2xl border border-brand-500 bg-brand-50 text-brand-800';
+
+      document.getElementById('formCropType').value = type;
+      document.getElementById('formCropName').value = name;
+      document.getElementById('formVariety').value = variety;
+    }
+
+    // =========================================================================
+    // MOBILE CAMERA & IN-APP LIVE SCANNER SYSTEM
+    // =========================================================================
+
+    // Client-side image compression for mobile speed
+    async function compressImageFile(file, maxDimension = 1400, quality = 0.85) {
+      return new Promise((resolve) => {
+        if (!file.type.startsWith('image/')) {
+          resolve(file);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxDimension || height > maxDimension) {
+              if (width > height) {
+                height = Math.round((height * maxDimension) / width);
+                width = maxDimension;
+              } else {
+                width = Math.round((width * maxDimension) / height);
+                height = maxDimension;
+              }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                  type: "image/jpeg",
+                  lastModified: Date.now(),
+                });
+                resolve(compressedFile);
+              } else {
+                resolve(file);
+              }
+            }, "image/jpeg", quality);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Handle File Input from Direct Camera or Gallery
+    async function handleFileInput(input, isProject = false) {
+      if (!input.files || !input.files[0]) return;
+      const originalFile = input.files[0];
+      const compressed = await compressImageFile(originalFile);
+
+      if (isProject) {
+        executeProjectDiagnosis(compressed);
+      } else {
+        executeStandaloneDiagnosis(compressed);
+      }
+      input.value = ''; // Reset so user can re-snap if needed
+    }
+
+    // In-App Live Camera Viewfinder Modal
+    async function openLiveCamera(target = 'standalone') {
+      currentCameraTarget = target;
+      const modal = document.getElementById('liveCameraModal');
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+      await startCameraStream();
+    }
+
+    async function startCameraStream() {
+      const video = document.getElementById('cameraVideo');
+      if (activeCameraStream) {
+        activeCameraStream.getTracks().forEach(track => track.stop());
+      }
+
+      try {
+        const constraints = {
+          video: {
+            facingMode: { ideal: currentFacingMode },
+            width: { ideal: 1280 },
+            height: { ideal: 960 },
+          },
+          audio: false,
+        };
+        activeCameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = activeCameraStream;
+      } catch (err) {
+        console.warn("In-app camera stream failed, falling back to direct mobile camera:", err);
+        closeLiveCamera();
+        // Trigger direct native camera input on mobile
+        if (currentCameraTarget === 'project') {
+          document.getElementById('projectDirectCameraInput').click();
+        } else {
+          document.getElementById('standaloneDirectCameraInput').click();
+        }
+      }
+    }
+
+    function switchCameraFacing() {
+      currentFacingMode = (currentFacingMode === 'environment') ? 'user' : 'environment';
+      startCameraStream();
+    }
+
+    function closeLiveCamera() {
+      if (activeCameraStream) {
+        activeCameraStream.getTracks().forEach(track => track.stop());
+        activeCameraStream = null;
+      }
+      document.getElementById('liveCameraModal').classList.add('hidden');
+    }
+
+    async function captureLivePhoto() {
+      const video = document.getElementById('cameraVideo');
+      const canvas = document.getElementById('cameraCanvas');
+      
+      if (!video || !video.videoWidth) {
+        alert("Camera is still warming up. Please try in a second.");
+        return;
+      }
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      closeLiveCamera();
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        const file = new File([blob], `live_snap_${Date.now()}.jpg`, { type: 'image/jpeg' });
+        const compressed = await compressImageFile(file);
+
+        if (currentCameraTarget === 'project') {
+          executeProjectDiagnosis(compressed);
+        } else {
+          executeStandaloneDiagnosis(compressed);
+        }
+      }, 'image/jpeg', 0.88);
+    }
+
+    // Execute Project Diagnosis
+    async function executeProjectDiagnosis(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const loading = document.getElementById('projectDiagLoading');
+      const resultCard = document.getElementById('projectDiagResult');
+
+      loading.classList.remove('hidden');
+      loading.classList.add('flex');
+      resultCard.classList.add('hidden');
+
+      try {
+        const res = await fetch(`/api/projects/${activeProjectId}/diagnose`, {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        resultCard.classList.remove('hidden');
+        resultCard.innerHTML = renderDiagnosisHtml(data);
+        lucide.createIcons();
+        openProjectHub(activeProjectId);
+      } catch (err) {
+        alert('Diagnosis failed: ' + err.message);
+      } finally {
+        loading.classList.add('hidden');
+        loading.classList.remove('flex');
+      }
+    }
+
+    // Execute Standalone Diagnosis
+    async function executeStandaloneDiagnosis(file) {
+      const cropName = document.getElementById('standaloneCropName').value.trim() || 'Rooftop Plant';
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('crop_name', cropName);
+
+      const loading = document.getElementById('standaloneLoading');
+      const resultCard = document.getElementById('standaloneResult');
+
+      loading.classList.remove('hidden');
+      loading.classList.add('flex');
+      resultCard.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/diagnose-standalone', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        resultCard.classList.remove('hidden');
+        resultCard.innerHTML = renderDiagnosisHtml(data);
+        lucide.createIcons();
+      } catch (err) {
+        alert('Diagnosis failed: ' + err.message);
+      } finally {
+        loading.classList.add('hidden');
+        loading.classList.remove('flex');
+      }
+    }
+
+    // =========================================================================
+    // PROJECTS DASHBOARD & HUB
+    // =========================================================================
+
+    async function loadProjects() {
+      try {
+        const res = await fetch('/api/projects');
+        const projects = await res.json();
+        const grid = document.getElementById('projectsGrid');
+        const noProjects = document.getElementById('noProjectsBanner');
+
+        grid.innerHTML = '';
+        if (!projects || projects.length === 0) {
+          noProjects.classList.remove('hidden');
+          return;
+        }
+        noProjects.classList.add('hidden');
+
+        projects.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-md transition-all space-y-4 cursor-pointer hover:border-brand-400 group';
+          card.onclick = () => openProjectHub(p.id);
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between">
+              <div class="flex items-center gap-3">
+                <span class="text-3xl">${p.icon}</span>
+                <div>
+                  <h3 class="font-bold text-slate-900 text-base group-hover:text-brand-700 transition-colors">${escapeHtml(p.crop_name)}</h3>
+                  <p class="text-xs text-slate-500">${escapeHtml(p.variety)}</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-brand-50 text-brand-700 border border-brand-200">
+                Day ${p.crop_age_days}
+              </span>
+            </div>
+
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs text-slate-500 font-semibold">
+                <span>${escapeHtml(p.current_stage)}</span>
+                <span>${p.progress_percentage}%</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div class="bg-brand-500 h-2 rounded-full transition-all" style="width: ${p.progress_percentage}%"></div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-xs">
+              <div class="bg-slate-50 p-2.5 rounded-xl">
+                <span class="text-slate-400 block text-[10px]">Today's Water</span>
+                <span class="font-bold text-blue-600">💧 ${p.today_water_ml} ml</span>
+              </div>
+              <div class="bg-slate-50 p-2.5 rounded-xl">
+                <span class="text-slate-400 block text-[10px]">To Harvest</span>
+                <span class="font-bold text-emerald-700">⏳ ${p.days_to_harvest} days</span>
+              </div>
+            </div>
+
+            <button class="w-full py-2 rounded-xl bg-slate-100 group-hover:bg-brand-600 group-hover:text-white text-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-1">
+              <span>Open Project Hub</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          `;
+          grid.appendChild(card);
+        });
+
+        lucide.createIcons();
+      } catch (e) {
+        console.error('Failed to load projects:', e);
+      }
+    }
+
+    async function submitNewProject(e) {
+      e.preventDefault();
+      const payload = {
+        crop_type: document.getElementById('formCropType').value,
+        crop_name: document.getElementById('formCropName').value,
+        variety: document.getElementById('formVariety').value,
+        planted_date: document.getElementById('formPlantedDate').value,
+        container_type: document.getElementById('formContainer').value,
+        container_count: parseInt(document.getElementById('formCount').value) || 2,
+      };
+
+      try {
+        const res = await fetch('/api/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const created = await res.json();
+        closeNewProjectModal();
+        openProjectHub(created.id);
+      } catch (err) {
+        alert('Could not create project: ' + err.message);
+      }
+    }
+
+    async function openProjectHub(projectId) {
+      activeProjectId = projectId;
+      switchMainTab('projectDetailTab');
+
+      try {
+        const res = await fetch(`/api/projects/${projectId}`);
+        const data = await res.json();
+        const p = data.project;
+        const care = data.realtime_care;
+
+        document.getElementById('projectHero').innerHTML = `
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5">
+              <span class="text-4xl sm:text-5xl p-2 bg-white/10 rounded-2xl">${p.icon}</span>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-xl sm:text-2xl font-bold font-serif">${escapeHtml(p.crop_name)}</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">Active</span>
+                </div>
+                <p class="text-xs text-emerald-200/80 mt-0.5">${escapeHtml(p.variety)} • ${data.container_count}x ${escapeHtml(data.container_type)}</p>
+              </div>
+            </div>
+
+            <div class="text-right sm:text-right bg-white/10 px-4 py-2.5 rounded-2xl backdrop-blur-sm border border-white/10">
+              <span class="text-xs text-emerald-200 uppercase tracking-wider block font-bold">Lifecycle Stage</span>
+              <span class="text-lg font-bold text-white">${escapeHtml(p.current_stage)}</span>
+              <span class="text-xs text-emerald-300 block">Day ${p.crop_age_days} of ${p.total_days}</span>
+            </div>
+          </div>
+          <p class="text-xs sm:text-sm text-emerald-100/90 leading-relaxed pt-2 border-t border-white/10">${escapeHtml(care.stage_summary)}</p>
+        `;
+
+        document.getElementById('careWaterAmount').innerText = `${care.today_water_ml} ml`;
+        document.getElementById('careWaterTip').innerText = care.water_tip;
+        document.getElementById('careFeedTip').innerText = care.feed_tip;
+        document.getElementById('careRoofTip').innerText = care.roof_tip;
+
+        const taskList = document.getElementById('taskList');
+        taskList.innerHTML = '';
+        data.tasks.forEach(t => {
+          const taskDiv = document.createElement('div');
+          taskDiv.className = `p-3.5 rounded-2xl border transition-all flex items-start gap-3 ${t.is_completed ? 'bg-slate-50 border-slate-200 opacity-60' : 'bg-white border-slate-200 shadow-sm'}`;
+          taskDiv.innerHTML = `
+            <input type="checkbox" ${t.is_completed ? 'checked' : ''} onchange="toggleTask(${t.id})" class="mt-1 w-4 h-4 rounded text-brand-600 focus:ring-brand-500 cursor-pointer" />
+            <div class="flex-1 space-y-0.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800 ${t.is_completed ? 'line-through' : ''}">${escapeHtml(t.title)}</span>
+                <span class="text-[10px] font-semibold text-slate-400">Day ${t.day_number}</span>
+              </div>
+              <p class="text-xs text-slate-500">${escapeHtml(t.description)}</p>
+            </div>
+          `;
+          taskList.appendChild(taskDiv);
+        });
+
+        const diagList = document.getElementById('pastDiagnosesList');
+        diagList.innerHTML = '';
+        if (data.diagnoses.length === 0) {
+          diagList.innerHTML = '<p class="text-xs text-slate-400 italic">No disease diagnoses recorded yet for this crop. Upload a photo above if you notice leaf spots or pests!</p>';
+        } else {
+          data.diagnoses.forEach(d => {
+            const dDiv = document.createElement('div');
+            dDiv.className = 'p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2';
+            dDiv.innerHTML = `
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <img src="${d.image_url}" class="w-12 h-12 rounded-xl object-cover border border-slate-200" />
+                  <div>
+                    <h4 class="font-bold text-xs text-slate-900">${escapeHtml(d.disease_name)}</h4>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${d.severity === 'High' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}">${d.severity} Severity</span>
+                  </div>
+                </div>
+                <span class="text-[10px] text-slate-400">${new Date(d.created_at).toLocaleDateString()}</span>
+              </div>
+              <div class="text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-100 answer-body">
+                ${marked.parse(d.organic_remedy)}
+              </div>
+            `;
+            diagList.appendChild(dDiv);
+          });
+        }
+
+        const logList = document.getElementById('projectLogList');
+        logList.innerHTML = '';
+        data.logs.forEach(l => {
+          const lDiv = document.createElement('div');
+          lDiv.className = 'p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-2.5 text-xs';
+          lDiv.innerHTML = `
+            <span class="text-base">${l.log_type === 'watering' ? '💧' : l.log_type === 'fertilizer' ? '🧪' : l.log_type === 'pest' ? '🐛' : '🌱'}</span>
+            <div class="flex-1">
+              <p class="text-slate-800 font-medium">${escapeHtml(l.note)}</p>
+              <span class="text-[10px] text-slate-400">${new Date(l.created_at).toLocaleString()}</span>
+            </div>
+          `;
+          logList.appendChild(lDiv);
+        });
+
+        lucide.createIcons();
+      } catch (err) {
+        console.error('Failed to load project hub:', err);
+      }
+    }
+
+    async function toggleTask(taskId) {
+      await fetch(`/api/tasks/${taskId}/toggle`, { method: 'PATCH' });
+      openProjectHub(activeProjectId);
+    }
+
+    async function submitProjectLog(e) {
+      e.preventDefault();
+      const type = document.getElementById('logTypeSelect').value;
+      const note = document.getElementById('logNoteInput').value.trim();
+      if (!note) return;
+
+      await fetch(`/api/projects/${activeProjectId}/logs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ log_type: type, note: note }),
+      });
+      document.getElementById('logNoteInput').value = '';
+      openProjectHub(activeProjectId);
+    }
+
+    function renderDiagnosisHtml(d) {
+      return `
+        <div class="p-5 sm:p-6 rounded-3xl bg-white border border-slate-200 shadow-md space-y-4 animate-in fade-in">
+          <div class="flex items-start gap-4">
+            <img src="${d.image_url}" class="w-20 h-20 rounded-2xl object-cover border border-slate-200 shadow-sm flex-shrink-0" />
+            <div class="space-y-1 flex-1">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-base text-slate-900">${escapeHtml(d.disease_name)}</h3>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${d.severity === 'High' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}">${d.severity} Severity</span>
+              </div>
+              <p class="text-xs text-slate-500"><strong>Identified Plant:</strong> ${escapeHtml(d.crop_name)} • <strong>Confidence:</strong> ${(d.confidence * 100).toFixed(0)}%</p>
+              <p class="text-xs text-slate-600"><strong>Symptoms:</strong> ${escapeHtml(d.symptoms)}</p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-brand-50/70 border border-brand-200 space-y-2">
+            <h4 class="font-bold text-xs text-brand-900 flex items-center gap-1.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-brand-600"></i>
+              <span>100% Organic Curing Protocol:</span>
+            </h4>
+            <div class="text-xs text-slate-800 leading-relaxed answer-body">
+              ${marked.parse(d.organic_remedy)}
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600">
+            <strong>Prevention Tips:</strong> ${escapeHtml(d.preventive_measures)}
+          </div>
+        </div>
+      `;
+    }
+
+    async function deleteCurrentProject() {
+      if (!confirm('Are you sure you want to delete this crop project?')) return;
+      await fetch(`/api/projects/${activeProjectId}`, { method: 'DELETE' });
+      switchMainTab('projectsTab');
+    }
+
+    // ROOFTOP CALCULATOR ENGINE
+    async function runRoofCalculation() {
+      const count = parseInt(document.getElementById('calcContainers').value) || 10;
+      const size = parseFloat(document.getElementById('calcBagSize').value) || 20;
+      const area = parseFloat(document.getElementById('calcArea').value) || 10;
+      const soilType = document.getElementById('calcSoilType').value;
+
+      try {
+        const res = await fetch('/api/organic/roof-calculator', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            container_count: count,
+            container_size_liters: size,
+            terrace_area_sqm: area,
+            soil_type: soilType,
+          }),
+        });
+        const data = await res.json();
+        const box = document.getElementById('calcResultBox');
+
+        box.innerHTML = `
+          <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <div>
+              <span class="text-xs text-emerald-300 font-bold uppercase tracking-wider">Roof Load Verdict</span>
+              <h3 class="text-xl font-bold font-serif ${data.is_safe ? 'text-emerald-300' : 'text-red-400'}">${data.status === 'SAFE' ? '✅ 100% Structurally Safe' : '⚠️ Exceeds Safe Load Limit'}</h3>
+            </div>
+            <span class="text-2xl font-bold">${data.load_kg_per_sqm} <span class="text-xs font-normal">kg/m²</span></span>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs text-emerald-200">
+              <span>Safety Capacity Used</span>
+              <span>${data.safety_capacity_used_pct}% (Max: 150 kg/m²)</span>
+            </div>
+            <div class="w-full bg-white/10 rounded-full h-2">
+              <div class="h-2 rounded-full ${data.is_safe ? 'bg-emerald-400' : 'bg-red-500'}" style="width: ${Math.min(100, data.safety_capacity_used_pct)}%"></div>
+            </div>
+          </div>
+
+          <div class="bg-white/10 p-4 rounded-2xl border border-white/10 space-y-2">
+            <h4 class="text-xs font-bold text-emerald-300">📦 Exact 3:1:1 Potting Mix Recipe for ${data.total_mix_volume_liters} Liters:</h4>
+            <div class="grid grid-cols-2 gap-2 text-xs text-emerald-100">
+              <div>• <strong>Cocopeat:</strong> ${data.potting_mix_breakdown_liters.cocopeat} Liters (60%)</div>
+              <div>• <strong>Vermicompost:</strong> ${data.potting_mix_breakdown_liters.vermicompost} Liters (20%)</div>
+              <div>• <strong>Perlite/Pumice:</strong> ${data.potting_mix_breakdown_liters.perlite_or_pumice} Liters (20%)</div>
+              <div>• <strong>Neem Cake:</strong> ${data.potting_mix_breakdown_liters.recommended_neem_cake_kg} kg (Pest shield)</div>
+            </div>
+          </div>
+
+          <p class="text-[11px] text-emerald-200/80 pt-1 leading-relaxed">${data.structural_recommendation}</p>
+        `;
+      } catch (e) {
+        console.error('Calculation error:', e);
+      }
+    }
+
+    // ORGANIC ENCYCLOPEDIA LOADERS
+    async function loadRemediesLibrary(query = '') {
+      activeLibraryTab = 'remedies';
+      document.getElementById('lib-remedies-btn').className = 'px-3 py-1.5 rounded-xl bg-brand-600 text-white text-xs font-bold shadow-sm whitespace-nowrap';
+      document.getElementById('lib-fert-btn').className = 'px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold hover:bg-slate-200 whitespace-nowrap';
+      document.getElementById('lib-seed-btn').className = 'px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold hover:bg-slate-200 whitespace-nowrap';
+
+      const res = await fetch(`/api/organic/remedies${query ? '?search=' + encodeURIComponent(query) : ''}`);
+      const data = await res.json();
+      const grid = document.getElementById('libraryContentGrid');
+      grid.innerHTML = '';
+
+      data.remedies.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3';
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="font-bold text-sm text-slate-900">${escapeHtml(r.name)}</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200">${escapeHtml(r.category)}</span>
+            </div>
+          </div>
+          <div class="text-xs text-slate-600">
+            <strong>Target Pests:</strong> ${r.target_pests.join(', ')}
+          </div>
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-xs text-slate-700 space-y-1">
+            <strong>Recipe Ingredients:</strong>
+            <ul class="list-disc ml-4 text-[11px] text-slate-600">
+              ${r.recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('')}
+            </ul>
+          </div>
+          <p class="text-[11px] text-slate-500 leading-relaxed">${escapeHtml(r.recipe.application_protocol)}</p>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    async function loadFertilizersLibrary() {
+      activeLibraryTab = 'fertilizers';
+      document.getElementById('lib-remedies-btn').className = 'px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold hover:bg-slate-200 whitespace-nowrap';
+      document.getElementById('lib-fert-btn').className = 'px-3 py-1.5 rounded-xl bg-brand-600 text-white text-xs font-bold shadow-sm whitespace-nowrap';
+      document.getElementById('lib-seed-btn').className = 'px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold hover:bg-slate-200 whitespace-nowrap';
+
+      const res = await fetch('/api/organic/fertilizers');
+      const data = await res.json();
+      const grid = document.getElementById('libraryContentGrid');
+      grid.innerHTML = '';
+
+      data.fertilizers.forEach(f => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3';
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="font-bold text-sm text-slate-900">${escapeHtml(f.name)}</h4>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">${escapeHtml(f.category)}</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-600"><strong>Nutrient Profile:</strong> ${escapeHtml(f.npk_profile)}</p>
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 text-xs text-slate-700 space-y-1">
+            <strong>Key Ingredients:</strong>
+            <ul class="list-disc ml-4 text-[11px] text-slate-600">
+              ${f.recipe.ingredients ? f.recipe.ingredients.map(i => `<li>${escapeHtml(i)}</li>`).join('') : ''}
+            </ul>
+          </div>
+          <p class="text-[11px] text-slate-500 leading-relaxed"><strong>Dosage:</strong> ${escapeHtml(f.recipe.dosage_and_application)}</p>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    async function loadSeedTreatmentLibrary() {
+      activeLibraryTab = 'seeds';
+      document.getElementById('lib-remedies-btn').className = 'px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold hover:bg-slate-200 whitespace-nowrap';
+      document.getElementById('lib-fert-btn').className = 'px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold hover:bg-slate-200 whitespace-nowrap';
+      document.getElementById('lib-seed-btn').className = 'px-3 py-1.5 rounded-xl bg-brand-600 text-white text-xs font-bold shadow-sm whitespace-nowrap';
+
+      const res = await fetch('/api/organic/seed-treatment');
+      const data = await res.json();
+      const grid = document.getElementById('libraryContentGrid');
+      grid.innerHTML = '';
+
+      data.seed_treatments.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3';
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="font-bold text-sm text-slate-900">${escapeHtml(s.crop_group)}</h4>
+              <p class="text-xs text-slate-500">Crops: ${s.crops.join(', ')}</p>
+            </div>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">${s.temp_celsius}°C (${s.temp_fahrenheit}°F)</span>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-2xl text-xs space-y-1">
+            <div>⏱️ <strong>Immersion Duration:</strong> ${s.immersion_minutes} Minutes</div>
+            <div>🛡️ <strong>Pathogens Eliminated:</strong> ${s.target_pathogens.join(', ')}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function handleLibrarySearch(val) {
+      if (activeLibraryTab === 'remedies') loadRemediesLibrary(val);
+    }
+
+    async function submitChatMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const question = input.value.trim();
+      if (!question) return;
+
+      input.value = '';
+      const container = document.getElementById('chatMessages');
+
+      const userDiv = document.createElement('div');
+      userDiv.className = 'flex justify-end';
+      userDiv.innerHTML = `<div class="max-w-[80%] p-3.5 rounded-2xl bg-brand-700 text-white text-xs sm:text-sm font-medium shadow-sm">${escapeHtml(question)}</div>`;
+      container.appendChild(userDiv);
+      container.scrollTop = container.scrollHeight;
+
+      const loadDiv = document.createElement('div');
+      loadDiv.className = 'flex items-center gap-2 p-3 text-xs text-brand-700 animate-pulse';
+      loadDiv.innerHTML = '<div class="w-4 h-4 border-2 border-brand-500 border-t-transparent rounded-full animate-spin"></div><span>Formulating organic advice...</span>';
+      container.appendChild(loadDiv);
+      container.scrollTop = container.scrollHeight;
+
+      try {
+        const res = await fetch('/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: question, top_k: 3 }),
+        });
+        const data = await res.json();
+        container.removeChild(loadDiv);
+
+        const aiDiv = document.createElement('div');
+        aiDiv.className = 'p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-800 space-y-2 answer-body';
+        aiDiv.innerHTML = marked.parse(data.answer);
+        container.appendChild(aiDiv);
+        container.scrollTop = container.scrollHeight;
+      } catch (err) {
+        loadDiv.innerHTML = `<span class="text-red-600">Error: ${err.message}</span>`;
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    loadProjects();
+  </script>
+</body>
+</html>
